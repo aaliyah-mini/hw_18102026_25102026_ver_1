@@ -1,0 +1,236 @@
+﻿<Window x:Class="LocalAiApi.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LocalAiApi.Wpf"
+        mc:Ignorable="d"
+        Title="AI Анализ заметок через Ollama" Height="650" Width="440"
+        MinHeight="300"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="Manual"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Foreground="#F5EFE6"
+        Topmost="True">
+
+
+    <Border BorderBrush="#4A423A"
+            BorderThickness="1"
+            CornerRadius="10"
+            Background="#1E1B18">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="#2A2622"
+                    CornerRadius="9,9,0,0"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+
+                <Grid>
+
+                    <Border Width="4"
+                            HorizontalAlignment="Left"
+                            Background="#F5A623"
+                            CornerRadius="9,0,0,0"/>
+
+                    <TextBlock Text="ИИ анализ заметки через Ollama"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="18,0,50,0"
+                               Foreground="#F5EFE6"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,6,0">
+
+                        <Button x:Name="CopyButton"
+                                Content="Copy"
+                                Width="32" Height="32"
+                                FontSize="13"
+                                Background="Transparent"
+                                Foreground="#C9BFAF"
+                                BorderThickness="0"
+                                ToolTip="Скопировать ответ"
+                                Click="CopyButton_Click"/>
+
+                        <Button x:Name="ToggleButton"
+                                Content="›"
+                                Width="36" Height="36"
+                                FontSize="22"
+                                Background="Transparent"
+                                Foreground="#F5EFE6"
+                                BorderThickness="0"
+                                Click="ToggleButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+
+            <Grid Grid.Row="1">
+
+                <Border x:Name="StripPanel"
+                        Width="100"
+                        HorizontalAlignment="Left"
+                        Background="#26221E"
+                        MouseLeftButtonDown="StripPanel_MouseLeftButtonDown"
+                        Visibility="Collapsed">
+
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Ollama"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#F5A623"/>
+                        <TextBlock Text="Развернуть"
+                                   FontSize="11"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#9C938A"
+                                   Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                
+                <Grid x:Name="ContentPanel" Margin="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="Заголовок заметки"
+                               Foreground="#9C938A"
+                               FontSize="12"/>
+
+                    <TextBox x:Name="TitleBox"
+                             Grid.Row="1"
+                             Margin="0,4,0,10"
+                             Padding="8"
+                             Background="#26221E"
+                             Foreground="#F5EFE6"
+                             BorderBrush="#3A342E"
+                             CaretBrush="#F5A623"
+                             Text="Название заметки"/>
+
+                    <TextBlock Grid.Row="2"
+                               Text="Текст заметки"
+                               Foreground="#9C938A"
+                               FontSize="12"/>
+
+                    <TextBox x:Name="ContentBox"
+                             Grid.Row="3"
+                             Margin="0,4,0,10"
+                             Padding="8"
+                             Height="80"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             Background="#26221E"
+                             Foreground="#F5EFE6"
+                             BorderBrush="#3A342E"
+                             CaretBrush="#F5A623"
+                             Text="список покупок на неделю"/>
+
+                    <StackPanel Grid.Row="4"
+                                Orientation="Horizontal"
+                                Margin="0,0,0,8">
+                        <TextBlock Text="Промпт:"
+                                   VerticalAlignment="Center"
+                                   Foreground="#9C938A"
+                                   Margin="0,0,8,0"/>
+                        
+                        <ComboBox x:Name="PromptCombo"
+                                  Width="150"
+                                  Background="#26221E"
+                                  Foreground="#F5EFE6"
+                                  BorderBrush="#3A342E">
+
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="ComboBoxForeground" Color="#F5EFE6"/>
+                                <SolidColorBrush x:Key="ComboBoxBackground" Color="#26221E"/>
+                            </ComboBox.Resources>
+
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="#26221E"/>
+                                    <Setter Property="Foreground" Value="#F5EFE6"/>
+                                    <Setter Property="Padding" Value="6,4"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <Setter Property="Background" Value="#3A342E"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#F5A623"/>
+                                            <Setter Property="Foreground" Value="#1E1B18"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            
+                        </ComboBox>
+
+                            <Button x:Name="RefreshButton"
+                                Content="Обновить промты"
+                                FontSize="8"
+                                Width="88" Height="26"
+                                Margin="8,0,0,0"
+                                Background="#2A2622"
+                                Foreground="#F5A623"
+                                BorderBrush="#3A342E"
+                                ToolTip="Обновить список промптов"
+                                Click="RefreshButton_Click"/>
+                    </StackPanel>
+
+                    <TextBox x:Name="ResponseTextBox"
+                             Grid.Row="5"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Disabled"
+                             Padding="12"
+                             Background="#26221E"
+                             Foreground="#F5EFE6"
+                             BorderBrush="#3A342E"
+                             FontSize="14"/>
+
+                    <ProgressBar x:Name="LoadingBar"
+                                 Grid.Row="6"
+                                 Height="4"
+                                 Margin="0,8,0,0"
+                                 IsIndeterminate="True"
+                                 Foreground="#F5A623"
+                                 Background="#2A2622"
+                                 BorderThickness="0"
+                                 Visibility="Collapsed"/>
+
+                    <Button x:Name="GenerateButton"
+                            Grid.Row="7"
+                            Content="Проанализировать с помощью ИИ"
+                            Height="44"
+                            Margin="0,12,0,0"
+                            Background="#F5A623"
+                            Foreground="#1E1B18"
+                            BorderThickness="0"
+                            FontSize="14"
+                            FontWeight="Bold"
+                            Click="GenerateButton_Click"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+    
+
+</Window>
